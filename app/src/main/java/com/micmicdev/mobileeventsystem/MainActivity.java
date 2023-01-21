@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -115,5 +116,28 @@ public class MainActivity extends AppCompatActivity {
                         token.continuePermissionRequest();
                     }
                 }).check();
+    }
+
+    public void onBackPressed(){
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Exit Event Management System");
+        builder.setMessage("Are you sure you want to quit?")
+                .setCancelable(false)
+                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                });
+        androidx.appcompat.app.AlertDialog alert = builder.create();
+        alert.show();
+
     }
 }
