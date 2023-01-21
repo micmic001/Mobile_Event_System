@@ -29,6 +29,8 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class RegistrationActivity extends AppCompatActivity {
     private DecoratedBarcodeView barcodeViewName;
     private DecoratedBarcodeView barcodeViewTix;
@@ -79,7 +81,32 @@ public class RegistrationActivity extends AppCompatActivity {
         backToMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intentBackToMenu();
+                if(firstName.equals("") || lastName.equals("") || tixNo.equals("")){
+                    intentBackToMenu();
+                    finish();
+                }
+                else{
+                    new SweetAlertDialog(RegistrationActivity.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Registration in-progress")
+                            .setContentText("Are you sure you want to go back to main menu?")
+                            .setCancelText("Nope")
+                            .setConfirmText("Yep")
+                            .showCancelButton(true)
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.cancel();
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    intentBackToMenu();
+                                    finish();
+                                }
+                            })
+                            .show();
+                }
             }
         });
 
@@ -116,7 +143,7 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private void intentBackToMenu(){
+    public void intentBackToMenu(){
         Intent i = new Intent(RegistrationActivity.this, MainActivity.class);
         startActivity(i);
         finish();
@@ -134,26 +161,32 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void onBackPressed(){
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(RegistrationActivity.this);
-        builder.setTitle("Exit Event Management System");
-        builder.setMessage("Are you sure you want to quit?")
-                .setCancelable(false)
-                .setPositiveButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
-
-                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        finish();
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        System.exit(1);
-                    }
-                });
-        androidx.appcompat.app.AlertDialog alert = builder.create();
-        alert.show();
-
+        if(firstName.equals("") || lastName.equals("") || tixNo.equals("")){
+            intentBackToMenu();
+            finish();
+        }
+        else{
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Registration in-progress")
+                    .setContentText("Are you sure you want to go back to main menu?")
+                    .setCancelText("Nope")
+                    .setConfirmText("Yep")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            intentBackToMenu();
+                            finish();
+                        }
+                    })
+                    .show();
+        }
     }
 
     //--Zxing barcode decoder.(Name)
