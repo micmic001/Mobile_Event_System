@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Mobile Event System</string>
+    <string name="stat_ready_scan">Ready to scan</string>
+    <string name="stat_wait">Scanning...</string>
+    <string name="null_str">---</string>
+    <string name="http_200">200: Server OK</string>
+    <string name="http_201">201: Posted</string>
+    <string name="http_204">204: No Content</string>
+    <string name="http_304">304: Not Modified</string>
+    <string name="http_400">400: Bad Request</string>
+    <string name="http_401">401: Not Authorized</string>
+    <string name="http_403">403: Forbidden</string>
+    <string name="http_404">404: Not Found</string>
+    <string name="http_409">409: Conflict</string>
+    <string name="http_500">500: Internal Server Error</string>
+    <string name="http_502">502: Bad Gateway</string>
+    <string name="http_503">503: Service Unavailable</string>
+    <string name="http_504">504: Gateway Timeout</string>
+    <string name="req_field">Required Field</string>
+</resources>
