@@ -9,28 +9,26 @@
     <uses-permission
         android:name="android.permission.CAMERA"
         android:required="true" />
-
     <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:required="true" />
-
     <uses-permission
         android:name="android.permission.INTERNET"
-        android:required = "true"
-        />
+        android:required="true" />
 
     <permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS" />
+
     <application
-        tools:replace="android:icon"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/Theme.MobileEventSystem"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.MobileEventSystem">
+        tools:replace="android:icon">
         <activity
             android:name=".AttendanceActivity"
             android:exported="false" />

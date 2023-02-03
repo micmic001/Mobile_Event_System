@@ -9,7 +9,10 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.journeyapps.barcodescanner.ViewfinderView;
+import com.micmicdev.mobileeventsystem.API.ApiClientInterface;
+import com.micmicdev.mobileeventsystem.API.ApiInterface;
 import com.micmicdev.mobileeventsystem.MOD.AlertsModule;
+import com.micmicdev.mobileeventsystem.STR.strEventDetails;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -21,15 +24,21 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegistrationActivity extends AppCompatActivity {
     private DecoratedBarcodeView barcodeViewName;
@@ -45,7 +54,13 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText seatNo, tixNo, firstName, lastName;
     TextView statusMessage, statusDetails, stat, resultText2, checkerResult, scannerTitle;
     ImageView g, s, t, g2, s2;
+    CheckBox idCard, vaxCard;
     Dialog popNameDialog, popTixDialog;
+    ProgressBar pBar;
+    strEventDetails post = null;
+    String strSeatNo="", strTixNo="", strFirstName="", strLastName="", strVaxCard="0", strId="0",
+            strDevice="", strAddedBy="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +76,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         initializeObjects();
         buttonTriggers();
+        pBar.setVisibility(View.INVISIBLE);
     }
 
     public void initializeObjects(){
@@ -75,6 +91,9 @@ public class RegistrationActivity extends AppCompatActivity {
         lastName = findViewById(R.id.et_lName);
         statusMessage = findViewById(R.id.tv_statusMessage);
         statusDetails = findViewById(R.id.tv_statusDetails);
+        idCard = findViewById(R.id.cb_idCard);
+        vaxCard = findViewById(R.id.cb_Vaxcard);
+        pBar = findViewById(R.id.progressBar);
     }
 
     public void buttonTriggers(){
@@ -113,7 +132,7 @@ public class RegistrationActivity extends AppCompatActivity {
         resetFields.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetFieldInputs();
+                resetFieldInputsWithStatus();
             }
         });
 
@@ -134,11 +153,58 @@ public class RegistrationActivity extends AppCompatActivity {
         registerViewer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertsModule alert = new AlertsModule(RegistrationActivity.this);
-                alert.successAlert();
+                /*AlertsModule alert = new AlertsModule(RegistrationActivity.this);
+                alert.successRegistration();
+                String fullName = (firstName.getText() + " " + lastName.getText() + " - " + seatNo.getText());
                 statusMessage.setVisibility(View.VISIBLE);
                 statusDetails.setVisibility(View.VISIBLE);
+                resetFieldInputs();
+                statusMessage.setVisibility(View.VISIBLE);
+                statusDetails.setVisibility(View.VISIBLE);
+                statusMessage.setText("Registered Viewer");
+                statusDetails.setText(fullName);*/
+                try {
+                    pBar.setVisibility(View.VISIBLE);
+                    strSeatNo = seatNo.getText().toString();
+                    strTixNo = tixNo.getText().toString();
+                    strFirstName = firstName.getText().toString();
+                    strLastName = lastName.getText().toString();
+                    if(idCard.isChecked()){
+                        strId = "1";
+                    }
+                    if(vaxCard.isChecked()){
+                        strVaxCard = "1";
+                    }
+                    post = new strEventDetails(strSeatNo, strTixNo, strFirstName,strLastName,strVaxCard,strId,"POCO Puta","Micmic","");
+                    String host = "http://192.168.100.8:5000";
+                    ApiClientInterface clientInterface = ApiInterface.getClient(host).create(ApiClientInterface.class);
+                    Call<strEventDetails> call = clientInterface.insertViewerData(post);
 
+                    call.enqueue(new Callback<strEventDetails>() {
+                        AlertsModule alert = new AlertsModule(RegistrationActivity.this);
+                        @Override
+                        public void onResponse(Call<strEventDetails> call, Response<strEventDetails> response) {
+                            String serverMessage = response.body().getMessage();
+                            alert.variableSuccessMessage(serverMessage);
+                            pBar.setVisibility(View.INVISIBLE);
+                            String fullName = (firstName.getText() + " " + lastName.getText() + " - " + seatNo.getText());
+                            statusMessage.setVisibility(View.VISIBLE);
+                            statusDetails.setVisibility(View.VISIBLE);
+                            resetFieldInputs();
+                            statusMessage.setVisibility(View.VISIBLE);
+                            statusDetails.setVisibility(View.VISIBLE);
+                            statusMessage.setText("Registered Viewer");
+                            statusDetails.setText(fullName);
+                        }
+
+                        @Override
+                        public void onFailure(Call<strEventDetails> call, Throwable t) {
+                            alert.variableErrorMessage(t.getMessage());
+                        }
+                    });
+                }catch(Exception e){
+                    Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -150,6 +216,37 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void resetFieldInputs(){
+        firstName.setText("");
+        lastName.setText("");
+        seatNo.setText("");
+        tixNo.setText("");
+        statusMessage.setText("-");
+        statusDetails.setText("-");
+        statusMessage.setVisibility(View.INVISIBLE);
+        statusDetails.setVisibility(View.INVISIBLE);
+    }
+
+    private void resetFieldInputsWithStatus(){
+        pBar.setVisibility(View.VISIBLE);
+        strSeatNo = seatNo.getText().toString();
+        post = new strEventDetails(strSeatNo,"0");
+        String host = "http://192.168.100.8:5000";
+        ApiClientInterface clientInterface = ApiInterface.getClient(host).create(ApiClientInterface.class);
+        Call<strEventDetails> call = clientInterface.updateSeatStatus(post);
+
+        call.enqueue(new Callback<strEventDetails>() {
+            AlertsModule alert = new AlertsModule(RegistrationActivity.this);
+            @Override
+            public void onResponse(Call<strEventDetails> call, Response<strEventDetails> response) {
+                pBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(RegistrationActivity.this, "Field Reset: \n Recent ticket scanned is set to available", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onFailure(Call<strEventDetails> call, Throwable t) {
+                pBar.setVisibility(View.INVISIBLE);
+                alert.variableErrorMessage(t.getMessage());
+            }
+        });
         firstName.setText("");
         lastName.setText("");
         seatNo.setText("");
@@ -314,10 +411,30 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void parseTicket(String inputTicket){
+        pBar.setVisibility(View.VISIBLE);
         String[] codeRaw;
         codeRaw = inputTicket.split(Pattern.quote("|"));
         seatNo.setText(codeRaw[2]);
         tixNo.setText(codeRaw[3]);
+        strSeatNo = seatNo.getText().toString();
+        post = new strEventDetails(strSeatNo,"1");
+        String host = "http://192.168.100.8:5000";
+        ApiClientInterface clientInterface = ApiInterface.getClient(host).create(ApiClientInterface.class);
+        Call<strEventDetails> call = clientInterface.updateSeatStatus(post);
+
+        call.enqueue(new Callback<strEventDetails>() {
+            AlertsModule alert = new AlertsModule(RegistrationActivity.this);
+            @Override
+            public void onResponse(Call<strEventDetails> call, Response<strEventDetails> response) {
+                pBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(RegistrationActivity.this, "Scanned ticket is set to processing status", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onFailure(Call<strEventDetails> call, Throwable t) {
+                pBar.setVisibility(View.INVISIBLE);
+                alert.variableErrorMessage(t.getMessage());
+            }
+        });
     }
 
     public void validateTix(String inputTicket){

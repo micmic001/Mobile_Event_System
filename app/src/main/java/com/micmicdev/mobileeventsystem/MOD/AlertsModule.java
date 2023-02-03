@@ -25,4 +25,30 @@ public class AlertsModule extends ContextWrapper {
                 .setContentText("Ticket is invalid or damaged.")
                 .show();
     }
+
+    public void generalMessage(String message){
+        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText(message)
+                .show();
+    }
+
+    public void successRegistration(){
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Viewer Registered")
+                .show();
+    }
+    public void variableSuccessMessage(String message){
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Success!")
+                .setContentText(message)
+                .show();
+    }
+
+    public void variableErrorMessage(String message){
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error!")
+                .setContentText(message)
+                .show();
+    }
+
 }
