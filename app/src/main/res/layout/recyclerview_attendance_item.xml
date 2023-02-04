@@ -14,49 +14,52 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/duplicate_barcode"
+        android:id="@+id/tv_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/seguibl"
         android:text="John Michael Librero"
+        android:textColor="@color/white"
         android:textSize="15dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/att_status"
+        app:layout_constraintEnd_toStartOf="@+id/tv_attStatus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/duplicate_docNo"
+        android:id="@+id/tv_seatNo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/segoeui"
         android:text="Seat No: A1"
+        android:textColor="@color/white"
         android:textSize="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/duplicate_barcode" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
     <TextView
-        android:id="@+id/duplicate_location"
+        android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:fontFamily="@font/segoeui"
         android:text="Time: 06:00:00 PM"
+        android:textColor="@color/white"
         android:textSize="12dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/duplicate_docNo" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_seatNo" />
 
     <TextView
-        android:id="@+id/att_status"
+        android:id="@+id/tv_attStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/segoeui"
         android:text="IN"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

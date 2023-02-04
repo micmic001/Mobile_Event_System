@@ -101,4 +101,28 @@
         app:layout_constraintVertical_bias="0.12"
         app:srcCompat="@drawable/ytc" />
 
+    <EditText
+        android:id="@+id/et_hostName"
+        android:layout_width="163dp"
+        android:layout_height="33dp"
+        android:ems="10"
+        android:hint="Host"
+        android:inputType="textPersonName"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_devceUser"
+        android:layout_width="163dp"
+        android:layout_height="33dp"
+        android:ems="10"
+        android:hint="User"
+        android:inputType="textPersonName"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@+id/et_hostName"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

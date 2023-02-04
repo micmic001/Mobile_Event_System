@@ -17,15 +17,15 @@
         android:textColor="@color/white"
         android:textSize="13sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/tv_seatNoVal2"
+        app:layout_constraintEnd_toEndOf="@+id/tv_nameVal"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tv_seatNoVal2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_seatNoVal2" />
+        app:layout_constraintStart_toStartOf="@+id/tv_nameVal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nameVal" />
 
     <TextView
-        android:id="@+id/tv_seatNoVal2"
+        android:id="@+id/tv_nameVal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -222,6 +222,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_dataList"
             android:layout_width="370dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

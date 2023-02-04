@@ -2,6 +2,8 @@ package com.micmicdev.mobileeventsystem.API;
 
 import com.micmicdev.mobileeventsystem.STR.strEventDetails;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -29,4 +31,13 @@ public interface ApiClientInterface {
 
     @POST("/insertProcessStatus")
     Call<strEventDetails> updateSeatStatus(@Body strEventDetails postSeatStatus);
+
+    @POST("/getTicketData")
+    Call<strEventDetails> getTicketData(@Body strEventDetails getTicketDatas);
+
+    @POST("/insertAttendanceData")
+    Call<strEventDetails> setViewerAttendance(@Body strEventDetails setAttendanceData);
+
+    @POST("/getAttendanceList")
+    Call<List<strEventDetails>> getViewerAttendanceList(@Body strEventDetails getAttendanceData);
 }

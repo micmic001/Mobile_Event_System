@@ -51,4 +51,11 @@ public class AlertsModule extends ContextWrapper {
                 .show();
     }
 
+    public void noScannedTicket(String message){
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("No Ticket Scanned!")
+                .setContentText(message)
+                .show();
+    }
+
 }

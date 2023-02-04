@@ -12,11 +12,14 @@ import com.journeyapps.barcodescanner.ViewfinderView;
 import com.micmicdev.mobileeventsystem.API.ApiClientInterface;
 import com.micmicdev.mobileeventsystem.API.ApiInterface;
 import com.micmicdev.mobileeventsystem.MOD.AlertsModule;
+import com.micmicdev.mobileeventsystem.MOD.GetDeviceNameModule;
 import com.micmicdev.mobileeventsystem.STR.strEventDetails;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private BeepManager beepManager;
     private String lastText;
     private CompoundBarcodeView initView;
+    SharedPreferences sharedpreferences;
     Boolean tixPass = false;
     Button  scanName, scanTix, registerViewer;
     ImageButton backToMenu, resetFields;
@@ -60,6 +64,10 @@ public class RegistrationActivity extends AppCompatActivity {
     strEventDetails post = null;
     String strSeatNo="", strTixNo="", strFirstName="", strLastName="", strVaxCard="0", strId="0",
             strDevice="", strAddedBy="";
+    String host = "", deviceUser="";
+    public static final String MYCONFIG = "MyConfig" ;
+    public static final String HOSTNAME = "host_name" ;
+    public static final String USERNAME = "user_name" ;
 
 
     @Override
@@ -71,6 +79,10 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+
+        sharedpreferences = getSharedPreferences(MYCONFIG, Context.MODE_PRIVATE);
+        host = sharedpreferences.getString(HOSTNAME, "");
+        deviceUser = sharedpreferences.getString(USERNAME, "");
 
         beepManager = new BeepManager(this);
 
@@ -175,8 +187,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     if(vaxCard.isChecked()){
                         strVaxCard = "1";
                     }
-                    post = new strEventDetails(strSeatNo, strTixNo, strFirstName,strLastName,strVaxCard,strId,"POCO Puta","Micmic","");
-                    String host = "http://192.168.100.8:5000";
+                    String deviceName = GetDeviceNameModule.getDeviceName();
+                    post = new strEventDetails(strSeatNo, strTixNo, strFirstName,strLastName,strVaxCard,strId,deviceName,deviceUser,"");
                     ApiClientInterface clientInterface = ApiInterface.getClient(host).create(ApiClientInterface.class);
                     Call<strEventDetails> call = clientInterface.insertViewerData(post);
 
@@ -184,17 +196,34 @@ public class RegistrationActivity extends AppCompatActivity {
                         AlertsModule alert = new AlertsModule(RegistrationActivity.this);
                         @Override
                         public void onResponse(Call<strEventDetails> call, Response<strEventDetails> response) {
-                            String serverMessage = response.body().getMessage();
-                            alert.variableSuccessMessage(serverMessage);
-                            pBar.setVisibility(View.INVISIBLE);
-                            String fullName = (firstName.getText() + " " + lastName.getText() + " - " + seatNo.getText());
-                            statusMessage.setVisibility(View.VISIBLE);
-                            statusDetails.setVisibility(View.VISIBLE);
-                            resetFieldInputs();
-                            statusMessage.setVisibility(View.VISIBLE);
-                            statusDetails.setVisibility(View.VISIBLE);
-                            statusMessage.setText("Registered Viewer");
-                            statusDetails.setText(fullName);
+                            try {
+                                String serverMessage = response.body().getMessage();
+                                if (serverMessage.equals("Viewer already registered")){
+                                    alert.variableErrorMessage(serverMessage);
+                                    resetFieldInputs();
+                                    statusMessage.setVisibility(View.INVISIBLE);
+                                    statusDetails.setVisibility(View.INVISIBLE);
+                                    pBar.setVisibility(View.INVISIBLE);
+                                }else{
+                                    alert.variableSuccessMessage(serverMessage);
+                                    pBar.setVisibility(View.INVISIBLE);
+                                    String fullName = (firstName.getText() + " " + lastName.getText() + " - " + seatNo.getText());
+                                    statusMessage.setVisibility(View.VISIBLE);
+                                    statusDetails.setVisibility(View.VISIBLE);
+                                    resetFieldInputs();
+                                    statusMessage.setVisibility(View.VISIBLE);
+                                    statusDetails.setVisibility(View.VISIBLE);
+                                    statusMessage.setText("Registered Viewer");
+                                    statusDetails.setText(fullName);
+                                }
+                            }catch (Exception e){
+                                alert.variableErrorMessage(e.getMessage());
+                                resetFieldInputs();
+                                statusMessage.setVisibility(View.INVISIBLE);
+                                statusDetails.setVisibility(View.INVISIBLE);
+                                pBar.setVisibility(View.INVISIBLE);
+                            }
+
                         }
 
                         @Override
@@ -230,7 +259,6 @@ public class RegistrationActivity extends AppCompatActivity {
         pBar.setVisibility(View.VISIBLE);
         strSeatNo = seatNo.getText().toString();
         post = new strEventDetails(strSeatNo,"0");
-        String host = "http://192.168.100.8:5000";
         ApiClientInterface clientInterface = ApiInterface.getClient(host).create(ApiClientInterface.class);
         Call<strEventDetails> call = clientInterface.updateSeatStatus(post);
 
@@ -294,7 +322,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
             lastText = result.getText();
             parseName(lastText);
-            //getLocalHost.setText(lastText);
             beepManager.playBeepSoundAndVibrate();
             barcodeViewName.setVisibility(View.GONE);
             popNameDialog.dismiss();
@@ -418,7 +445,6 @@ public class RegistrationActivity extends AppCompatActivity {
         tixNo.setText(codeRaw[3]);
         strSeatNo = seatNo.getText().toString();
         post = new strEventDetails(strSeatNo,"1");
-        String host = "http://192.168.100.8:5000";
         ApiClientInterface clientInterface = ApiInterface.getClient(host).create(ApiClientInterface.class);
         Call<strEventDetails> call = clientInterface.updateSeatStatus(post);
 

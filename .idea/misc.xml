@@ -20,6 +20,7 @@
         <entry key="..\:/Users/jlibrero/Videos/Files/Apps/MobileEventSystem/app/src/main/res/layout/activity_setting.xml" value="0.171875" />
         <entry key="..\:/Users/jlibrero/Videos/Files/Apps/MobileEventSystem/app/src/main/res/layout/custom_scanner.xml" value="0.25" />
         <entry key="..\:/Users/jlibrero/Videos/Files/Apps/MobileEventSystem/app/src/main/res/layout/listview_singleitem.xml" value="0.25" />
+        <entry key="..\:/Users/jlibrero/Videos/Files/Apps/MobileEventSystem/app/src/main/res/layout/recyclerview_attendance_item.xml" value="0.6" />
         <entry key="..\:/Users/jlibrero/Videos/Files/Apps/MobileEventSystem/app/src/main/res/layout/recyclerview_history_item.xml" value="0.6" />
         <entry key="..\:/Users/jlibrero/Videos/Files/Apps/MobileEventSystem/app/src/main/res/layout/recyclerview_scanner_item.xml" value="0.25" />
         <entry key="..\:/Users/jlibrero/Videos/Files/Apps/MobileEventSystem/app/src/main/res/layout/scanner_checker.xml" value="0.25" />
@@ -31,5 +32,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.536" />
+      </ProjectState>
+    </option>
   </component>
 </project>

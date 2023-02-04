@@ -4,14 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
@@ -24,6 +29,11 @@ import com.karumi.dexter.listener.single.PermissionListener;
 public class MainActivity extends AppCompatActivity {
 
     Button gotoRegister, gotoAttendance;
+    EditText hostName, deviceUserName;
+    SharedPreferences sharedpreferences;
+    public static final String MYCONFIG = "MyConfig" ;
+    public static final String HOSTNAME = "host_name" ;
+    public static final String USERNAME = "user_name" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         permissionControlCam();
         gotoRegister = findViewById(R.id.bt_register);
         gotoAttendance = findViewById(R.id.bt_attendance);
+        hostName = findViewById(R.id.et_hostName);
+        deviceUserName = findViewById(R.id.et_devceUser);
+        sharedpreferences = getSharedPreferences(MYCONFIG, Context.MODE_PRIVATE);
+
+        hostName.setText(sharedpreferences.getString(HOSTNAME, ""));
+        deviceUserName.setText(sharedpreferences.getString(USERNAME, ""));
 
         gotoRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,11 +61,48 @@ public class MainActivity extends AppCompatActivity {
                 intentGoToRegistration();
             }
         });
-
         gotoAttendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 intentGoToAttendance();
+            }
+        });
+
+        hostName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(HOSTNAME, hostName.getText().toString());
+                editor.commit();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        deviceUserName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString(USERNAME, deviceUserName.getText().toString());
+                editor.commit();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
     }
